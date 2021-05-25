@@ -1,33 +1,57 @@
 <template>
   <div id="app">
-    <div id="haha">hahaha</div>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Loading />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Loading from "./components/Loading.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Loading,
+  },
+
+  // 禁止放大缩小
+  mounted() {
+    document.documentElement.addEventListener(
+      "touchstart",
+      function(event) {
+        if (event.touches.length > 1) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+    // 禁止双击放大
+    let lastTouchEnd = 0;
+    document.documentElement.addEventListener(
+      "touchend",
+      function(event) {
+        var now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      },
+      { passive: false }
+    );
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
-
-#haha{
-  height:180px;
+#app {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import './utils/rem'
+import './assets/css/reset.css'
+import './assets/css/border.css'
 
 Vue.config.productionTip = false
 
