@@ -1,16 +1,22 @@
 <template>
   <div id="app">
     <Loading />
+    <!-- <Env /> -->
+    <Cube />
   </div>
 </template>
 
 <script>
-import Loading from "./components/Loading.vue";
+import Loading from "./components/Loading";
+// import Env from "./components/Env";
+import Cube from "./components/Cube";
 
 export default {
   name: "App",
   components: {
     Loading,
+    // Env,
+    Cube
   },
 
   // 禁止放大缩小

@@ -28,7 +28,7 @@
 <script>
 export default {
   name: "Loading",
-  data:function(){
+  data(){
     return{
       vedioShow: false,
       tipsShow: true,
@@ -39,7 +39,13 @@ export default {
       this.tipsShow = false
       this.vedioShow = true
       const video = document.getElementById('video')
-      video.play()
+      video.play() 
+      const that = this     
+      video.addEventListener("ended",function(){
+        console.log('end')
+        that.vedioShow = false
+      })
+
     }
   }
 };
