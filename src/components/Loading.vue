@@ -1,145 +1,47 @@
 <template>
-  <div class="m-wrap">
-    <div class="m-loading" v-show="tipsShow">
-      <div class="bg-box"></div>
-      <div class="begin-box">
-        <div class="begin-tips"></div>
-        <div class="btn-begin" @click="begin"></div>
-      </div>
-    </div>
-    <div class="m-index" v-show="vedioShow">
-      <div class="video-box">
-        <video
-          src="../assets/img/qc.mp4"
-          id="video"
-          width="100%"
-          height="100%"
-          preload="none"
-          x5-playsinline=""
-          playsinline=""
-          webkit-playsinline=""
-        ></video>
-        <div class="btn-skip"></div>
-      </div>
-    </div>
+  <div class="loading">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="30px"
+      height="30px"
+      viewBox="0 0 50 50"
+      style="enable-background:new 0 0 50 50"
+      xml:space="preserve"
+    >
+      <path
+        fill="#FF6700"
+        d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"
+        transform="rotate(275.098 25 25)"
+      >
+        <animateTransform
+          attributeType="xml"
+          attributeName="transform"
+          type="rotate"
+          from="0 25 25"
+          to="360 25 25"
+          dur="0.6s"
+          repeatCount="indefinite"
+        ></animateTransform>
+      </path>
+    </svg>
   </div>
 </template>
 
 <script>
 export default {
   name: "Loading",
-  data(){
-    return{
-      vedioShow: false,
-      tipsShow: true,
-    }
-  },
-  methods:{
-    begin(){
-      this.tipsShow = false
-      this.vedioShow = true
-      const video = document.getElementById('video')
-      video.play() 
-      const that = this     
-      video.addEventListener("ended",function(){
-        console.log('end')
-        that.vedioShow = false
-      })
-
-    }
-  }
 };
 </script>
 
+
 <style scoped>
-
-/*loading开始点击*/
-
-.m-loading,
-.m-loading .bg-box {
+.loading {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.m-loading {
-    z-index: 100;
-    background: #000;
-}
-
-.bg-box {
-  background: url(../assets/img/bg01.png) no-repeat;
-  background-size: 100% 100%;
-}
-
-.m-loading .begin-box {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.m-loading .begin-box .begin-tips {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url(../assets/img/jiantou.png) no-repeat;
-  background-size: 100% 100%;
-  -webkit-animation: tips 1.4s linear infinite;
-  animation: tips 1.4s linear infinite;
-}
-
-@keyframes tips {
-  0% {
-    transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.02);
-    transform: scale(1.02);
-    opacity: 0.6;
-  }
-  to {
-    transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes tips {
-  0% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    -webkit-transform: scale(1.02);
-    transform: scale(1.02);
-    opacity: 0.6;
-  }
-  to {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/*H5进行中*/
-
-.m-index,
-.m-index .video-box,
-.m-loading .begin-box .btn-begin {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  text-align: center;
 }
 </style>

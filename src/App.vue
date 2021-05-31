@@ -1,22 +1,35 @@
 <template>
   <div id="app">
-    <Loading />
+    <Begin @videoStart="conVideoStart" />
+    <Video :videoStatus="videoStatus"/>
     <!-- <Env /> -->
-    <Cube />
+    <QCEnv />
   </div>
 </template>
 
 <script>
-import Loading from "./components/Loading";
+import Begin from "./components/Begin";
+import Video from "./components/Video";
 // import Env from "./components/Env";
-import Cube from "./components/Cube";
+import QCEnv from "./components/QCEnv";
 
 export default {
   name: "App",
   components: {
-    Loading,
+    Begin,
+    Video,
     // Env,
-    Cube
+    QCEnv
+  },
+  data(){
+    return{
+      videoStatus: false
+    }
+  },
+  methods:{
+    conVideoStart(videoGo){
+      this.videoStatus = videoGo
+    }
   },
 
   // 禁止放大缩小
@@ -59,5 +72,6 @@ body {
 #app {
   width: 100%;
   height: 100%;
+  background-color: black;
 }
 </style>
