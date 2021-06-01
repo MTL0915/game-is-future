@@ -1,11 +1,14 @@
 <template>
   <div class="video-wrap" v-show="videoShow">
     <video
-      src="../assets/img/end.mp4"
+      src="../assets/img/start.mp4"
       id="video"
       width="100%"
       height="100%"
       preload="auto"
+      x5-playsinline="" 
+      playsinline="" 
+      webkit-playsinline=""
     ></video>
     <div class="loading-wrapper" v-show="loadingShow">
       <Loading />

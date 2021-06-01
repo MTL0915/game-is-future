@@ -35,8 +35,10 @@ export default {
         0.1,
         100
       );
-      this.camera.position.z = 0.1;
-      this.camera.position.x = 0;
+      // 相机会在它自己的位置，往坐标轴（0,0,0）看去
+      this.camera.position.z = -0.05;
+      this.camera.position.y = 0;
+      this.camera.position.x = -0.2;
 
       this.controls = new OrbitControls(this.camera,this.renderer.domElement);
       this.controls.enableZoom = false;
@@ -44,8 +46,13 @@ export default {
       this.controls.enableDamping = true;
       this.controls.rotateSpeed = -0.25;
 
+      // 坐标轴
+      var axisHelper = new THREE.AxisHelper(250);
+      this.scene.add(axisHelper);
+
+
       const textures = this.getTexturesFromAtlasFile(
-        "/static/qccolor4.jpg",
+        "/static/qccolor5.jpg",
         6
       );
 
@@ -57,6 +64,7 @@ export default {
 
       const skyBox = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), materials);
       skyBox.geometry.scale(1, 1, -1);
+      skyBox.geometry.translate(0, 0, 0)
       this.scene.add(skyBox);
 
       window.addEventListener("resize", this.onWindowResize); 
