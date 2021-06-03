@@ -1,7 +1,7 @@
 <template>
   <div class="video-wrap" v-show="videoShow">
     <video
-      src="../assets/img/start.mp4"
+      src="../assets/img/end.mp4"
       id="video"
       width="100%"
       height="100%"
