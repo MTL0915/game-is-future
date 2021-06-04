@@ -3,7 +3,8 @@
     <Begin @videoStart="conVideoStart" />
     <Video :videoStatus="videoStatus"/>
     <!-- <Env /> -->
-    <QCEnv />
+    <QCEnv @photoShow="conPhotoShow"/>
+    <Photo :photoStatus="photoStatus" :picName="picName" @clickCancel="reClickCancel"/>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import Begin from "./components/Begin";
 import Video from "./components/Video";
 // import Env from "./components/Env";
 import QCEnv from "./components/QCEnv";
+import Photo from "./components/Photo";
 
 export default {
   name: "App",
@@ -19,16 +21,26 @@ export default {
     Begin,
     Video,
     // Env,
-    QCEnv
+    QCEnv,
+    Photo
   },
   data(){
     return{
-      videoStatus: false
+      videoStatus: false,
+      photoStatus: false,
+      picName : null
     }
   },
   methods:{
     conVideoStart(videoGo){
       this.videoStatus = videoGo
+    },
+    conPhotoShow(picShow, name){
+      this.photoStatus = picShow
+      this.picName = name
+    },
+    reClickCancel(reProps){
+      this.photoStatus = !reProps
     }
   },
 

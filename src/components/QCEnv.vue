@@ -13,6 +13,7 @@ export default {
     return {
       camera: null,
       scene: null,
+      scene2: null,
       renderer: null,
       controls: null,
       raycaster: null,
@@ -77,22 +78,33 @@ export default {
       const material1 = new THREE.MeshBasicMaterial({color:0x0000ff})
       const mesh1 = new THREE.Mesh(cube1, material1);
       mesh1.position.x = 0.5;
-      mesh1.position.y = -0.1;
-      mesh1.position.z = 0;
+      mesh1.position.y = 0.2;
+      mesh1.position.z = 0.2;
       mesh1.updateMatrix();
       mesh1.name = 'cube1'
       this.scene.add(mesh1);  
 
-      // 测试添加正方体2
+      // 测试添加正方体2(环境变化)
       const cube2 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
-      const material2 = new THREE.MeshBasicMaterial({color:0x0000ff})
+      const material2 = new THREE.MeshBasicMaterial({color:0x00ff00})
       const mesh2 = new THREE.Mesh(cube2, material2);
-      mesh2.position.x = 0;
-      mesh2.position.y = 0;
-      mesh2.position.z = 0.2;
+      mesh2.position.x = 0.45;
+      mesh2.position.y = -0.1;
+      mesh2.position.z = 0;
       mesh2.updateMatrix();
-      mesh1.name = 'cube2'
+      mesh2.name = 'cube2'
       this.scene.add(mesh2); 
+
+      // 测试添加正方体3
+      const cube3 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
+      const material3 = new THREE.MeshBasicMaterial({color:0xFF00FF})
+      const mesh3 = new THREE.Mesh(cube3, material3);
+      mesh3.position.x = -0.45;
+      mesh3.position.y = 0;
+      mesh3.position.z = 0.4;
+      mesh3.updateMatrix();
+      mesh3.name = 'cube3'
+      this.scene.add(mesh3); 
 
     },
 
@@ -116,10 +128,37 @@ export default {
 
         console.log(intersects)
         // console.log(window.event.touches[0].clientX)
-        intersects[0].object.material.color.set( 0xff0000 )
-        if(intersects[0].object.name == 'cube2'){
-          alert(2)
+        // intersects[0].object.material.color.set( 0xff0000 )
+
+        if(intersects[0].object.name == 'cube1'){
+          console.log(1)
+          this.$emit('photoShow', true, 'cube1')
         }
+
+        if(intersects[0].object.name == 'cube2'){
+          this.scene2 = new THREE.Scene();
+          const textures = this.getTexturesFromAtlasFile("/static/qccolor2.jpg", 6);
+
+          const materials = [];
+
+          for (let i = 0; i < 6; i++) {
+            materials.push(new THREE.MeshBasicMaterial({ map: textures[i] }));
+          }
+
+          const skyBox = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), materials);
+          skyBox.geometry.scale(1, 1, -1);
+          skyBox.geometry.translate(0, 0, 0);
+          this.scene2.add(skyBox);
+          this.scene = this.scene2
+
+        }
+
+        if(intersects[0].object.name == 'cube3'){
+          console.log(3)
+          this.$emit('photoShow', true, 'cube3')
+        }
+
+
         
     },
 
