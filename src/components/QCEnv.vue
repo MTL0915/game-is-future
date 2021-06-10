@@ -6,6 +6,8 @@
 import * as THREE from "three/build/three.module.js";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { OBJLoader } from '../../node_modules/three/examples/jsm/loaders/OBJLoader.js';
+import { MTLLoader } from '../../node_modules/three/examples/jsm/loaders/MTLLoader.js';
 
 export default {
   name: "QCEnv",
@@ -51,6 +53,18 @@ export default {
       // this.controls.dispose () //移除所有的事件监听
       // console.log(this.controls)
 
+      // 创建点光源照着猫
+      let light = new THREE.DirectionalLight(0xffffff);
+      light.position.set(0.2, 0.2, 0.2);
+      this.scene.add(light);
+      let light2 = new THREE.DirectionalLight(0xffffff);
+      light2.position.set(-80, -100, -50);
+      this.scene.add(light2);
+      // 环境光
+      var ambient = new THREE.AmbientLight(0xffffff);
+      this.scene.add(ambient);
+      console.log(ambient)
+
       // 坐标轴
       // var axisHelper = new THREE.AxisHelper(0.5);
       // this.scene.add(axisHelper);
@@ -95,13 +109,32 @@ export default {
       mesh2.name = 'cube2'
       this.scene.add(mesh2); 
 
+      // 测试猫模型
+      let that=this;
+      let objloader=new OBJLoader();
+      let mtlloader=new MTLLoader();
+      mtlloader.load('/static/Maneki_Nekodimo.mtl', function(materials) {
+        // 返回一个包含材质的对象MaterialCreator
+        // console.log(materials);
+        //obj的模型会和MaterialCreator包含的材质对应起来
+        objloader.setMaterials(materials);
+        objloader.load('/static/Maneki_Nekodimo.obj', function(obj) {
+          let mesh=obj;
+          mesh.scale.set(0.001,0.001,0.001)
+          that.scene.add(mesh);
+        })
+      })
+
+
       // 测试添加正方体3
       const cube3 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
       const material3 = new THREE.MeshBasicMaterial({color:0xFF00FF})
+      material3.transparent = true ;
+      material3.opacity = 0.5 ;
       const mesh3 = new THREE.Mesh(cube3, material3);
-      mesh3.position.x = -0.45;
+      mesh3.position.x = 0;
       mesh3.position.y = 0;
-      mesh3.position.z = 0.4;
+      mesh3.position.z = 0;
       mesh3.updateMatrix();
       mesh3.name = 'cube3'
       this.scene.add(mesh3); 
