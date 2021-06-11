@@ -63,7 +63,6 @@ export default {
       // 环境光
       var ambient = new THREE.AmbientLight(0xffffff);
       this.scene.add(ambient);
-      console.log(ambient)
 
       // 坐标轴
       // var axisHelper = new THREE.AxisHelper(0.5);
@@ -96,6 +95,7 @@ export default {
       mesh1.position.z = 0.2;
       mesh1.updateMatrix();
       mesh1.name = 'cube1'
+      console.log(mesh1)
       this.scene.add(mesh1);  
 
       // 测试添加正方体2(环境变化)
@@ -119,9 +119,26 @@ export default {
         //obj的模型会和MaterialCreator包含的材质对应起来
         objloader.setMaterials(materials);
         objloader.load('/static/Maneki_Nekodimo.obj', function(obj) {
-          let mesh=obj;
-          mesh.scale.set(0.001,0.001,0.001)
-          that.scene.add(mesh);
+          let cat=obj;
+          cat.scale.set(0.001,0.001,0.001)
+          cat.children[0].name = 'cat'
+          that.scene.add(cat);
+        })
+      })
+
+      // 测试飞船模型
+      let objloader2=new OBJLoader();
+      let mtlloader2=new MTLLoader();
+      mtlloader2.load('/static/feichuan.mtl', function(materials) {
+        // 返回一个包含材质的对象MaterialCreator
+        // console.log(materials);
+        //obj的模型会和MaterialCreator包含的材质对应起来
+        objloader2.setMaterials(materials);
+        objloader2.load('/static/feichuan.obj', function(obj) {
+          let feichuan=obj;
+          feichuan.scale.set(0.0001,0.0001,0.0001)
+          feichuan.children[0].name = 'feichuan'
+          that.scene.add(feichuan);
         })
       })
 
@@ -132,7 +149,7 @@ export default {
       material3.transparent = true ;
       material3.opacity = 0.5 ;
       const mesh3 = new THREE.Mesh(cube3, material3);
-      mesh3.position.x = 0;
+      mesh3.position.x = -0.45;
       mesh3.position.y = 0;
       mesh3.position.z = 0;
       mesh3.updateMatrix();
@@ -157,8 +174,7 @@ export default {
         this.raycaster.setFromCamera( this.mouse, this.camera );
 
         // 获取raycaster直线和所有模型相交的数组集合
-        const intersects = this.raycaster.intersectObjects( this.scene.children );
-
+        const intersects = this.raycaster.intersectObjects( this.scene.children, true );
         console.log(intersects)
         // console.log(window.event.touches[0].clientX)
         // intersects[0].object.material.color.set( 0xff0000 )
@@ -189,6 +205,11 @@ export default {
         if(intersects[0].object.name == 'cube3'){
           console.log(3)
           this.$emit('photoShow', true, 'cube3')
+        }
+
+        if(intersects[0].object.name == 'cat'){
+          console.log('cat')
+          // this.$emit('photoShow', true, 'cube3')
         }
 
 
