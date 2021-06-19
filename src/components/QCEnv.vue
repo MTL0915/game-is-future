@@ -19,7 +19,13 @@ export default {
       renderer: null,
       controls: null,
       raycaster: null,
-      mouse: null
+      mouse: null,
+      group: null,
+      group2:null,
+      clock: null,
+      clock2: null,
+      mixer: null,
+      mixer2: null
     };
   },
   methods: {
@@ -68,6 +74,15 @@ export default {
       // var axisHelper = new THREE.AxisHelper(0.5);
       // this.scene.add(axisHelper);
 
+      // 创建一个帧动画时钟对象Clock
+      this.clock = new THREE.Clock();
+      this.clock2 = new THREE.Clock();
+      // 创建一个帧动画组
+      this.group = new THREE.Group();
+      this.group2 = new THREE.Group();
+
+
+
       const textures = this.getTexturesFromAtlasFile("/static/qccolor.jpg", 6);
 
       const materials = [];
@@ -95,52 +110,18 @@ export default {
       mesh1.position.z = 0.2;
       mesh1.updateMatrix();
       mesh1.name = 'cube1'
-      console.log(mesh1)
       this.scene.add(mesh1);  
 
       // 测试添加正方体2(环境变化)
-      const cube2 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
-      const material2 = new THREE.MeshBasicMaterial({color:0x00ff00})
-      const mesh2 = new THREE.Mesh(cube2, material2);
-      mesh2.position.x = 0.45;
-      mesh2.position.y = -0.1;
-      mesh2.position.z = 0;
-      mesh2.updateMatrix();
-      mesh2.name = 'cube2'
-      this.scene.add(mesh2); 
-
-      // 测试猫模型
-      let that=this;
-      let objloader=new OBJLoader();
-      let mtlloader=new MTLLoader();
-      mtlloader.load('/static/Maneki_Nekodimo.mtl', function(materials) {
-        // 返回一个包含材质的对象MaterialCreator
-        // console.log(materials);
-        //obj的模型会和MaterialCreator包含的材质对应起来
-        objloader.setMaterials(materials);
-        objloader.load('/static/Maneki_Nekodimo.obj', function(obj) {
-          let cat=obj;
-          cat.scale.set(0.001,0.001,0.001)
-          cat.children[0].name = 'cat'
-          that.scene.add(cat);
-        })
-      })
-
-      // 测试飞船模型
-      let objloader2=new OBJLoader();
-      let mtlloader2=new MTLLoader();
-      mtlloader2.load('/static/feichuan.mtl', function(materials) {
-        // 返回一个包含材质的对象MaterialCreator
-        // console.log(materials);
-        //obj的模型会和MaterialCreator包含的材质对应起来
-        objloader2.setMaterials(materials);
-        objloader2.load('/static/feichuan.obj', function(obj) {
-          let feichuan=obj;
-          feichuan.scale.set(0.0001,0.0001,0.0001)
-          feichuan.children[0].name = 'feichuan'
-          that.scene.add(feichuan);
-        })
-      })
+      // const cube2 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
+      // const material2 = new THREE.MeshBasicMaterial({color:0x00ff00})
+      // const mesh2 = new THREE.Mesh(cube2, material2);
+      // mesh2.position.x = 0.45;
+      // mesh2.position.y = -0.1;
+      // mesh2.position.z = 0;
+      // mesh2.updateMatrix();
+      // mesh2.name = 'cube2'
+      // this.scene.add(mesh2); 
 
 
       // 测试添加正方体3
@@ -156,9 +137,95 @@ export default {
       mesh3.name = 'cube3'
       this.scene.add(mesh3); 
 
+
+      // 测试帧动画正方体4
+      const cube4 = new THREE.BoxGeometry(0.03, 0.03, 0.03);
+      const material4 = new THREE.MeshBasicMaterial({color:0xFF00FF})
+      const mesh4 = new THREE.Mesh(cube4, material4);
+      mesh4.position.x = 0.45;
+      mesh4.position.y = -0.1;
+      mesh4.position.z = 0;
+      mesh4.updateMatrix();
+      mesh4.name = 'cube4' ;
+      this.group.add(mesh4);
+      this.scene.add(this.group); 
+
+
+      // 测试猫模型
+      let that=this;
+      let objloader=new OBJLoader();
+      let mtlloader=new MTLLoader();
+      mtlloader.load('/static/Maneki_Nekodimo.mtl', function(materials) {
+        // 返回一个包含材质的对象MaterialCreator
+        // console.log(materials);
+        //obj的模型会和MaterialCreator包含的材质对应起来
+        objloader.setMaterials(materials);
+        objloader.load('/static/Maneki_Nekodimo.obj', function(obj) {
+          let cat=obj;
+          cat.scale.set(0.001,0.001,0.001)
+          // cat.children[0].name = 'cat';
+          cat.name = 'cat';
+          that.group2.add(cat);
+          that.scene.add(that.group2);  
+        })
+      })
+
+      // 测试飞船模型
+      // let objloader2=new OBJLoader();
+      // let mtlloader2=new MTLLoader();
+      // mtlloader2.load('/static/feichuan.mtl', function(materials) {
+      //   // 返回一个包含材质的对象MaterialCreator
+      //   // console.log(materials);
+      //   //obj的模型会和MaterialCreator包含的材质对应起来
+      //   objloader2.setMaterials(materials);
+      //   objloader2.load('/static/feichuan.obj', function(obj) {
+      //     let feichuan=obj;
+      //     feichuan.scale.set(0.0001,0.0001,0.0001)
+      //     feichuan.children[0].name = 'feichuan'
+      //     that.scene.add(feichuan);
+      //   })
+      // })
+
+
+      /**
+       * 编辑group子对象网格模型mesh1和mesh2的帧动画数据
+       */
+      // 创建名为Box对象的关键帧数据
+      var times = [0, 20]; //关键帧时间数组，离散的时间点序列
+      var values = [0.35, -0.2, 0, 0.45, -0.1, 0]; //与时间点对应的值组成的数组
+      // 创建位置关键帧对象：0时刻对应位置0, 0, 0   20时刻对应位置150, 0, 0
+      var posTrack = new THREE.KeyframeTrack('cube4.position', times, values);
+      // 创建名为Sphere对象的关键帧数据  从0~20时间段，尺寸scale缩放3倍
+      var scaleTrack = new THREE.KeyframeTrack('cat.scale', [0, 20], [1, 1, 1, 2, 2, 2]);
+
+      // duration决定了默认的播放时间，一般取所有帧动画的最大时间
+      // duration偏小，帧动画数据无法播放完，偏大，播放完帧动画会继续空播放
+      var duration = 20;
+      // 多个帧动画作为元素创建一个剪辑clip对象，命名"default"，持续时间10
+      var clip = new THREE.AnimationClip("default", duration, [posTrack]);
+      var clip2 = new THREE.AnimationClip("default", duration, [scaleTrack]);
+
+
+      /**
+       * 播放编辑好的关键帧数据
+       */
+      // group作为混合器的参数，可以播放group中所有子对象的帧动画
+      this.mixer = new THREE.AnimationMixer(this.group);
+      this.mixer2 = new THREE.AnimationMixer(this.group2);
+      // 剪辑clip作为参数，通过混合器clipAction方法返回一个操作对象AnimationAction
+      var AnimationAction = this.mixer.clipAction(clip);
+      var AnimationAction2 = this.mixer2.clipAction(clip2);
+      //通过操作Action设置播放方式
+      AnimationAction.timeScale = 20;//默认1，可以调节播放速度
+      AnimationAction2.timeScale = 20;
+      // AnimationAction.loop = THREE.LoopOnce; //不循环播放
+      AnimationAction.play();//开始播放
+      AnimationAction2.play();
+
     },
 
-    // 射线获取对象
+
+    // 射线获取对象，并根据点击的对象触发对应的事件
 
     onMouseClick() {
         //声明raycaster和mouse变量
@@ -184,7 +251,7 @@ export default {
           this.$emit('photoShow', true, 'cube1')
         }
 
-        if(intersects[0].object.name == 'cube2'){
+        if(intersects[0].object.name == 'cube4'){
           this.scene2 = new THREE.Scene();
           const textures = this.getTexturesFromAtlasFile("/static/qccolor2.jpg", 6);
 
@@ -207,7 +274,7 @@ export default {
           this.$emit('photoShow', true, 'cube3')
         }
 
-        if(intersects[0].object.name == 'cat'){
+        if(intersects[0].object.parent.name == 'cat'){
           console.log('cat')
           // this.$emit('photoShow', true, 'cube3')
         }
@@ -218,7 +285,7 @@ export default {
 
 
 
-
+    // 环境贴图加载创建
     getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
       const textures = [];
       for (let i = 0; i < tilesNum; i++) {
@@ -252,6 +319,7 @@ export default {
       return textures;
     },
 
+    // 窗口大小变化则再次渲染
     onWindowResize() {
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
@@ -259,12 +327,18 @@ export default {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     },
 
+    // 画面渲染
     animate() {
       requestAnimationFrame(this.animate);
 
       this.controls.update(); // required when damping is enabled
 
       this.renderer.render(this.scene, this.camera);
+
+      //clock.getDelta()方法获得两帧的时间间隔
+      // 更新混合器相关的时间
+      this.mixer.update(this.clock.getDelta());
+      this.mixer2.update(this.clock2.getDelta());
     },
   },
 
